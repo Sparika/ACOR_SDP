@@ -51,6 +51,9 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
+var rooms = []
+app.set('rooms', rooms);
+
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
@@ -60,8 +63,7 @@ var io = require('socket.io').listen(server);  //pass a http.Server instance
 server.listen(port);
 console.log('The magic happens on port ' + port);
 
-
-var numClients = {}
+var socketToRoom = {}
 
 io.sockets.on('connection', function(socket) {
 
@@ -77,7 +79,7 @@ io.sockets.on('connection', function(socket) {
     // for a real app, would be room-only (not broadcast)
     //io.to(message.room).emit('event', message.message);
     //socket.broadcast.emit('message', message.message);
-      io.sockets.in(message.room).emit('message', message.message);
+      socket.broadcast.in(message.room).emit('message', message.message);
   });
 
   socket.on('create or join', function(room) {
@@ -85,17 +87,20 @@ io.sockets.on('connection', function(socket) {
     //var numClients = io.sockets.sockets.length;
     //log('Room ' + room + ' now has ' + numClients + ' client(s)');
 
-    if (!numClients[room] || numClients[room] === 0){
-        numClients[room] = 1
+    if (!rooms[room] || rooms[room].user === 0){
+        rooms[room] = {user:1, name:room}
         socket.join(room);
+        socketToRoom[socket.id] = room
         log('Client ID ' + socket.id + ' created room ' + room);
         socket.emit('created', room, socket.id);
-    } else if (numClients[room] === 1) {
-      numClients[room] = 2
+    } else if (rooms[room].user === 1) {
+      rooms[room].user = 2
       log('Client ID ' + socket.id + ' joined room ' + room);
       io.sockets.in(room).emit('join', room);
       socket.join(room);
+      socketToRoom[socket.id] = room
       socket.emit('joined', room, socket.id);
+
       io.sockets.in(room).emit('ready');
     } else { // max two clients
       socket.emit('full', room);
@@ -113,8 +118,8 @@ io.sockets.on('connection', function(socket) {
     }
   });
 
-  socket.on('bye', function(room){
-    numClients[room] = numClients[room] -1
+  socket.on('disconnect', function(){
+    rooms[socketToRoom[socket.id]].user --
     console.log('received bye');
   });
 

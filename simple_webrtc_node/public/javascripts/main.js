@@ -80,10 +80,8 @@ socket.on('message', function(message) {
     getIdentityACOR(sessionDescription.sdp)
     setIdentityACOR()
     //console.log('Set Remote')
+    console.log(sessionDescription)
     pc.setRemoteDescription(sessionDescription)
-    .catch(error => {
-        console.error(error)
-    })
     .then(() => {
         console.log('Remote set')
         if(pc.peerIdentity){
@@ -97,13 +95,13 @@ socket.on('message', function(message) {
         }
         doAnswer();
     })
+    .catch(error => {
+        console.error(error)
+    })
   } else if (message.type === 'answer' && isStarted) {
     var sessionDescription = new RTCSessionDescription(message)
     getIdentityACOR(sessionDescription.sdp)
     pc.setRemoteDescription(sessionDescription)
-    .catch(error => {
-        console.error(error)
-    })
     .then(setDescrRes => {
         console.log('Remote set')
         console.log(setDescrRes)
@@ -116,6 +114,9 @@ socket.on('message', function(message) {
                 document.getElementById('peerId').innerHTML= 'Peer identity is '+res.name+' verified by '+res.idp+'.';
             })
         }
+    })
+    .catch(error => {
+        console.error(error)
     })
   } else if (message.type === 'candidate' && isStarted) {
     var candidate = new RTCIceCandidate({
@@ -408,45 +409,61 @@ function raiseDistantACR(){
     return -1
 }
 
-function extractAIdentity(sdp){
-    var sdpArray = sdp.split(/(a=identity:.*(==)?|m=.*)/)
+function splitMediaSdp(sdp){
+    var sdpArray = sdp.split(/(a=identity|m=)/)
     return sdpArray
+}
+
+function parseACOR(sdp){
+    var acor = {acr:-1, or:null}
+    if(sdp.indexOf('a=acor:') !== -1){
+        var array = sdp.split(/a=acor:|m=.*/)[1].split(/\s/)
+        acor.acr = JSON.parse(array[0])
+        acor.or = JSON.parse(array[1])
+    }
+    console.log(acor)
+    return acor
 }
 
 /** REQUEST Identity ACOR to Remote peer **/
 function reqIdentityACOR(sdp, acr, or){
     requestedOR = or
     requestedACR = acr
-    var sdpArray = extractAIdentity(sdp)
+    var sdpArray = splitMediaSdp(sdp)
 
-    if(!sdpArray[1].startsWith('a=identity')){
+    //if(!sdpArray[1].startsWith('a=identity')){
         // For the moment we can't request ACOR if we don't have an identity
-        return sdp
+    //    return sdp
         //sdpArray.splice(1, 0, "a=identity:e30=");
-    }
-    var identity = sdpArray[1]
-    sdpArray[1] = identity.split(' acr=')[0]+' acr='+requestedACR+' ; or='+requestedOR+' '
+    //}
+    //var identity = sdpArray[1]
+    //sdpArray[1] = identity.split(' acr=')[0]+' acr='+requestedACR+' ; or='+requestedOR+' '
+    var acor = 'a=acor:'+requestedACR+' '+requestedOR+'\n'
+    sdpArray.splice(1,0, acor)
+    console.log(sdpArray)
     return sdpArray.join('')
 }
 
 /** GET Identity ACOR requested by Remote SDP **/
 function getIdentityACOR(sdp){
-    var sdpArray = extractAIdentity(sdp)
-    if(sdpArray[1].startsWith('a=identity')){
-        // Comply with request
-        var identity = sdpArray[1].split(/(\sacr=|(?:;)?\sor=)/)
-        console.log(identity)
-        for(var i=0; i<identity.length; i++){
-            if(identity[i] == ' acr='){
-                requestedACR = parseInt(identity[i+1])
-                i++
-            } else if(identity[i] == ' or='){
-                requestedOR = identity[i+1]
-                i++
-
-            }
-        }
-    } //Else nothing to do
+    var acor = parseACOR(sdp)
+    requestedOR = acor.or
+    requestedACR = acor.acr
+//    if(sdpArray[1].startsWith('a=identity')){
+//        // Comply with request
+//        var identity = sdpArray[1].split(/(\sacr=|(?:;)?\sor=)/)
+//        console.log(identity)
+//        for(var i=0; i<identity.length; i++){
+//            if(identity[i] == ' acr='){
+//                requestedACR = parseInt(identity[i+1])
+//                i++
+//            } else if(identity[i] == ' or='){
+//                requestedOR = identity[i+1]
+//                i++
+//
+//            }
+//        }
+//    } //Else nothing to do
 }
 
 /** SET Local Identity ACOR **/

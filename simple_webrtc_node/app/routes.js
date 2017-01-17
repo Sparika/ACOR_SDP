@@ -21,6 +21,12 @@ module.exports = function(app, passport) {
     });
 
     // ROOM ==============================
+    app.get('/room/', isLoggedIn, function(req, res){
+        res.render('rooms.ejs', {
+            user: req.user,
+            rooms: app.get('rooms')
+        });
+    })
     app.get('/room/:roomId', isLoggedIn, function(req, res){
         res.render('room.ejs', {
             user: req.user,
