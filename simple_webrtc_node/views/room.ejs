@@ -22,7 +22,11 @@
     <video id="remoteVideo" autoplay></video>
   </div>
 
-  <input id="ACR" type="button" value="ACR +1" onclick="raiseDistantACR();" />
+  <form onSubmit="return raiseDistantACR()">
+    <label for="peer_acr">Peer ACR : </label><input id="peer_acr" type="number" min="-1" max="4" step="1" value ="-1"/>
+    <label for="peer_or">Peer Id Origin : </label><input id="peer_or" type="text" value ="192.168.99.100:8080"/>
+    <input name="Submit"  type="submit" value="Request"/>
+  </form>
 
   <script>
   var room = <%= room %>

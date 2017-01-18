@@ -77,7 +77,7 @@ socket.on('message', function(message) {
       maybeStart();
     }
     var sessionDescription = new RTCSessionDescription(message)
-    getIdentityACOR(sessionDescription.sdp)
+    parseACOR(sessionDescription.sdp)
     setIdentityACOR()
     //console.log('Set Remote')
     console.log(sessionDescription)
@@ -100,7 +100,7 @@ socket.on('message', function(message) {
     })
   } else if (message.type === 'answer' && isStarted) {
     var sessionDescription = new RTCSessionDescription(message)
-    getIdentityACOR(sessionDescription.sdp)
+    parseACOR(sessionDescription.sdp)
     pc.setRemoteDescription(sessionDescription)
     .then(setDescrRes => {
         console.log('Remote set')
@@ -400,13 +400,13 @@ var distantOR = null,
     distantACR = -1,
     localOR = null,
     localACR = -1,
-    requestedOR = null,
-    requestedACR = -1
+    requestedACOR = {or:null, acr:-1}
 
 function raiseDistantACR(){
-    distantACR++;
+    distantACR = document.getElementById('peer_acr').value;
+    distantOR = document.getElementById('peer_or').value;
     doCall()
-    return -1
+    return false
 }
 
 function splitMediaSdp(sdp){
@@ -418,61 +418,32 @@ function parseACOR(sdp){
     var acor = {acr:-1, or:null}
     if(sdp.indexOf('a=acor:') !== -1){
         var array = sdp.split(/a=acor:|m=.*/)[1].split(/\s/)
-        acor.acr = JSON.parse(array[0])
-        acor.or = JSON.parse(array[1])
+        acor.acr = JSON.parse(array[1])
+        acor.or = array[0]
     }
-    console.log(acor)
-    return acor
+    requestedACOR = acor
 }
 
 /** REQUEST Identity ACOR to Remote peer **/
 function reqIdentityACOR(sdp, acr, or){
-    requestedOR = or
-    requestedACR = acr
     var sdpArray = splitMediaSdp(sdp)
-
-    //if(!sdpArray[1].startsWith('a=identity')){
-        // For the moment we can't request ACOR if we don't have an identity
-    //    return sdp
-        //sdpArray.splice(1, 0, "a=identity:e30=");
-    //}
-    //var identity = sdpArray[1]
-    //sdpArray[1] = identity.split(' acr=')[0]+' acr='+requestedACR+' ; or='+requestedOR+' '
-    var acor = 'a=acor:'+requestedACR+' '+requestedOR+'\n'
+    var acor = 'a=acor:'+or+' '+acr+'\n'
     sdpArray.splice(1,0, acor)
-    console.log(sdpArray)
     return sdpArray.join('')
-}
-
-/** GET Identity ACOR requested by Remote SDP **/
-function getIdentityACOR(sdp){
-    var acor = parseACOR(sdp)
-    requestedOR = acor.or
-    requestedACR = acor.acr
-//    if(sdpArray[1].startsWith('a=identity')){
-//        // Comply with request
-//        var identity = sdpArray[1].split(/(\sacr=|(?:;)?\sor=)/)
-//        console.log(identity)
-//        for(var i=0; i<identity.length; i++){
-//            if(identity[i] == ' acr='){
-//                requestedACR = parseInt(identity[i+1])
-//                i++
-//            } else if(identity[i] == ' or='){
-//                requestedOR = identity[i+1]
-//                i++
-//
-//            }
-//        }
-//    } //Else nothing to do
 }
 
 /** SET Local Identity ACOR **/
 function setIdentityACOR(){
     // Add Identity
     console.log('Setting OR and ACR as requested')
-    if(requestedOR == null || requestedOR == '192.168.99.100:8080'){
-        localOR = requestedOR
-        localACR = localACR>requestedACR? localACR : requestedACR
+    console.log(requestedACOR)
+    if(requestedACOR.acr <= 0){
+        // do nothing, no auth required
+    }
+    else if(requestedACOR.or == 'null' || requestedACOR.or == '192.168.99.100:8080'){
+        //We use the default one (ie 192.168.99.100)
+        localOR = requestedACOR.or
+        localACR = localACR>requestedACOR.acr? localACR : requestedACOR.acr
         if(localACR>=0){
             console.log('setIdp with acr '+localACR)
             pc.setIdentityProvider('192.168.99.100:8080','rethink-oidc','acr='+localACR)
@@ -480,10 +451,7 @@ function setIdentityACOR(){
             console.log('acr < 0, no identity requested')
         }
     } else {
-        window.alert('Cannot comply with OR '+requestedOR)
+        //We can't use the requested IdP
+        window.alert('Cannot comply with OR '+requestedACOR.or)
     }
-}
-
-function verifyIdReqComplied(){
-
 }

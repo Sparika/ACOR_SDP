@@ -152,7 +152,7 @@ module.exports = function(passport) {
             jwtFromRequest : ExtractJwt.fromUrlQueryParameter('jwt'),
             keyInHeader : true,
             // TODO issuer must not be set, but instead iss must match jku domain
-            issuer : 'https://192.168.99.100:8080',
+            //issuer : 'https://192.168.99.100:8080',
             algorithms : ['RS256'],
             passReqToCallback : true
 
