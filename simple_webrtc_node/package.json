@@ -3,6 +3,9 @@
   "main": "index.js",
   "version": "0.0.1",
   "description": "WebRTC com service with integrated identity management.",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "atob": "^1.1.2",
     "bcrypt-nodejs": "latest",
