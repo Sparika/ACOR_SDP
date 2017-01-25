@@ -1,0 +1,29 @@
+{
+  "name": "webrtc-connect",
+  "main": "index.js",
+  "version": "0.0.1",
+  "description": "WebRTC com service with integrated identity management.",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "atob": "^1.1.2",
+    "bcrypt-nodejs": "latest",
+    "body-parser": "~1.15.2",
+    "btoa": "^1.1.2",
+    "connect-flash": "~0.1.1",
+    "cookie-parser": "~1.4.3",
+    "ejs": "~2.5.2",
+    "express": "~4.14.0",
+    "express-session": "~1.14.1",
+    "method-override": "~2.3.6",
+    "mongoose": "~4.6.1",
+    "morgan": "~1.7.0",
+    "node-static": "0.7.7",
+    "passport": "~0.3.2",
+    "passport-jwt": "https://github.com/Sparika/passport-jwt",
+    "passport-local": "~1.0.0",
+    "request": "^2.78.0",
+    "socket.io": "^1.4.5"
+  }
+}

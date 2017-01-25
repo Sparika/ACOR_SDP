@@ -1,0 +1,10 @@
+acor-webrtc:
+  build: .
+  links:
+    - mongo
+  ports:
+    - "8082:8080"
+mongo:
+  image: mongo
+  ports:
+    - "27017"

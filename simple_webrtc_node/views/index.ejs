@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body         { padding-top:80px; }
+        img {
+          vertical-align:top;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+
+    <div class="jumbotron text-center">
+        <h1><span class="fa fa-lock"></span> Node Authentication</h1>
+
+        <p>Login or Register with:</p>
+
+        <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
+        <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
+        <a href="#" onclick="authConnect()" class="btn btn-default"><img src="icon64.png" height="16" width="16"> Connect</a>
+    </div>
+
+</div>
+
+		<script type="text/javascript" src="javascripts/lib/wid_api.js"></script>
+		<script>
+		function authConnect(){
+            wid_connect({})
+            .then(jwt => {
+                window.location.href = "/auth/connect?jwt="+jwt
+            })
+		}
+		</script>
+</body>
+</html>
