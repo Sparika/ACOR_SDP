@@ -25,6 +25,7 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
+        console.log('serialize')
         done(null, user.id);
     });
 
@@ -158,6 +159,7 @@ module.exports = function(passport) {
 
         },
         function(req, jwt_payload, done){
+            console.log('Verify function')
             console.log(jwt_payload)
             // asynchronous
             process.nextTick(function() {
@@ -178,11 +180,12 @@ module.exports = function(passport) {
                                 user.save(function(err) {
                                     if (err)
                                         return done(err);
-
+                                    console.log("Alt1")
                                     return done(null, user);
                                 });
                             }
 
+                            console.log("Alt2")
                             return done(null, user);
                         } else {
                             var newUser          = new User();
@@ -195,6 +198,7 @@ module.exports = function(passport) {
                                 if (err)
                                     return done(err);
 
+                                console.log("Alt3")
                                 return done(null, newUser);
                             });
                         }
@@ -212,6 +216,7 @@ module.exports = function(passport) {
                         if (err)
                             return done(err);
 
+                        console.log("Alt4")
                         return done(null, user);
                     });
 

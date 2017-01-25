@@ -440,13 +440,13 @@ function setIdentityACOR(){
     if(requestedACOR.acr <= 0){
         // do nothing, no auth required
     }
-    else if(requestedACOR.or == 'null' || requestedACOR.or == '192.168.99.100:8080'){
+    else if(requestedACOR.or == 'null' || requestedACOR.or == 'energyq.idp.rethink.orange-labs.fr'){
         //We use the default one (ie 192.168.99.100)
         localOR = requestedACOR.or
         localACR = localACR>requestedACOR.acr? localACR : requestedACOR.acr
         if(localACR>=0){
             console.log('setIdp with acr '+localACR)
-            pc.setIdentityProvider('192.168.99.100:8080','rethink-oidc','acr='+localACR)
+            pc.setIdentityProvider('energyq.idp.rethink.orange-labs.fr','rethink-oidc','acr='+localACR)
         } else {
             console.log('acr < 0, no identity requested')
         }
