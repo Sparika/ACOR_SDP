@@ -28,10 +28,21 @@ module.exports = function(app, passport) {
         });
     })
     app.get('/room/:roomId', isLoggedIn, function(req, res){
-        res.render('room.ejs', {
-            user: req.user,
-            room: req.params.roomId
-        });
+        var rooms = app.get('rooms'),
+            roomId = req.params.roomId,
+            user = req.user
+        if(! rooms[roomId]){
+           rooms[roomId] = {user:[], name: roomId}
+        }
+        if(rooms[roomId].user.length<2){
+            rooms[roomId].user.push(user)
+            res.render('room.ejs', {
+                user: req.user,
+                room: req.params.roomId
+            });
+        } else {
+            res.redirect('/room/')
+        }
     })
 
     app.get('/error', function(req,res){
@@ -108,12 +119,35 @@ module.exports = function(app, passport) {
         });
     });
 
+
+// =============================================================================
+// DOMAIN REGISTRY =============================================================
+// =============================================================================
+    app.get('/user/:user_id', function(req,res){
+        var userInRoom = {},
+            rooms = app.get('rooms')
+
+        for (room in rooms){
+            if(room.user.indexOf(req.params.user_id) >= 0){
+                userInRoom['/room/'+room.name] = {type:'url'}
+            }
+        }
+        res.send(userInRoom)
+    })
+
+    app.delete('/room/:roomId', isLoggedIn, function(req,res){
+        var room = app.get('rooms')[req.params.roomId]
+        var index = room.user.indexOf(req.user)
+        if(index > -1)
+            room.user.splice(index,1)
+        res.send(200)
+    })
+
 };
 
 // route middleware to ensure user is logged in
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())
         return next();
-
     res.redirect('/');
 }

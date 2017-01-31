@@ -181,6 +181,9 @@ function maybeStart() {
 }
 
 window.onbeforeunload = function() {
+  var init = {method: 'DELETE',
+                credentials: 'same-origin'}
+  fetch(window.location,init)
   sendMessage('bye');
 };
 

@@ -63,8 +63,6 @@ var io = require('socket.io').listen(server);  //pass a http.Server instance
 server.listen(port);
 console.log('The magic happens on port ' + port);
 
-var socketToRoom = {}
-
 io.sockets.on('connection', function(socket) {
 
   // convenience function to log server messages on the client
@@ -87,21 +85,11 @@ io.sockets.on('connection', function(socket) {
     //var numClients = io.sockets.sockets.length;
     //log('Room ' + room + ' now has ' + numClients + ' client(s)');
 
-    if (!rooms[room] || rooms[room].user === 0){
-        rooms[room] = {user:1, name:room}
-        socket.join(room);
-        socketToRoom[socket.id] = room
-        log('Client ID ' + socket.id + ' created room ' + room);
-        socket.emit('created', room, socket.id);
-    } else if (rooms[room].user === 1) {
-      rooms[room].user = 2
+    if (rooms[room].user.length < 2){
       log('Client ID ' + socket.id + ' joined room ' + room);
       io.sockets.in(room).emit('join', room);
       socket.join(room);
-      socketToRoom[socket.id] = room
-      socket.emit('joined', room, socket.id);
-
-      io.sockets.in(room).emit('ready');
+      //socket.emit('created', room, socket.id);
     } else { // max two clients
       socket.emit('full', room);
     }
@@ -119,7 +107,6 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('disconnect', function(){
-    rooms[socketToRoom[socket.id]].user --
     console.log('received bye');
   });
 
