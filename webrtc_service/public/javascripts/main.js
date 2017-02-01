@@ -11,7 +11,17 @@ var turnReady;
 var pcConfig = {
   'iceServers': [{
     'url': 'stun:stun.l.google.com:19302'
-  }]
+  }
+  {
+    "url": "stun:stun.sipgate.net"
+  },
+  {
+    "url": "stun:217.10.68.152"
+  },
+  {
+    "url": "stun:stun.sipgate.net:10000"
+  }
+  ]}
 };
 
 // Set up audio and video regardless of what devices are present.
