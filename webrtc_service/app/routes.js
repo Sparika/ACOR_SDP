@@ -126,6 +126,7 @@ module.exports = function(app, passport) {
     })
 
     app.put('/room/:roomId', isLoggedIn, function(req, res){
+        res.sendStatus(200)
         var rooms = app.get('rooms'),
             roomId = req.params.roomId,
             user = req.user
@@ -136,10 +137,10 @@ module.exports = function(app, passport) {
             rooms[roomId].user.push(user)
             console.log('added '+user._id+' there is '+rooms[roomId].user.length)
         }
-        res.sendStatus(200)
     })
 
     app.delete('/room/:roomId', isLoggedIn, function(req,res){
+        res.sendStatus(200)
         var room = app.get('rooms')[req.params.roomId]
         for (var i = 0; i<room.user.length; i++) {
                 if (JSON.stringify(room.user[i]._id) === JSON.stringify(req.user._id)) {
@@ -148,7 +149,6 @@ module.exports = function(app, passport) {
                     break;
                 }
         }
-        res.sendStatus(200)
     })
 
 };
