@@ -21,7 +21,7 @@ var pcConfig = {
   {
     "url": "stun:stun.sipgate.net:10000"
   }
-  ]}
+  ]
 };
 
 // Set up audio and video regardless of what devices are present.
