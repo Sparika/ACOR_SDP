@@ -28,21 +28,10 @@ module.exports = function(app, passport) {
         });
     })
     app.get('/room/:roomId', isLoggedIn, function(req, res){
-        var rooms = app.get('rooms'),
-            roomId = req.params.roomId,
-            user = req.user
-        if(! rooms[roomId]){
-           rooms[roomId] = {user:[], name: roomId}
-        }
-        if(rooms[roomId].user.length<2){
-            rooms[roomId].user.push(user)
-            res.render('room.ejs', {
-                user: req.user,
-                room: req.params.roomId
-            });
-        } else {
-            res.redirect('/room/')
-        }
+        res.render('room.ejs', {
+            user: req.user,
+            room: req.params.roomId
+        });
     })
 
     app.get('/error', function(req,res){
@@ -123,24 +112,43 @@ module.exports = function(app, passport) {
 // =============================================================================
 // DOMAIN REGISTRY =============================================================
 // =============================================================================
-    app.get('/user/:user_id', function(req,res){
+    app.get('/registry/:userId', function(req,res){
         var userInRoom = {},
             rooms = app.get('rooms')
-
         for (room in rooms){
-            if(room.user.indexOf(req.params.user_id) >= 0){
-                userInRoom['/room/'+room.name] = {type:'url'}
+            for(user in rooms[room].user){
+                if (JSON.stringify(rooms[room].user[user]._id) === JSON.stringify(req.params.userId)) {
+                    userInRoom['/room/'+rooms[room].name] = {type:'url'}
+                }
             }
         }
         res.send(userInRoom)
     })
 
+    app.put('/room/:roomId', isLoggedIn, function(req, res){
+        var rooms = app.get('rooms'),
+            roomId = req.params.roomId,
+            user = req.user
+        if(! rooms[roomId]){
+           rooms[roomId] = {user:[], name: roomId}
+        }
+        if(rooms[roomId].user.length<2){
+            rooms[roomId].user.push(user)
+            console.log('added '+user._id+' there is '+rooms[roomId].user.length)
+        }
+        res.sendStatus(200)
+    })
+
     app.delete('/room/:roomId', isLoggedIn, function(req,res){
         var room = app.get('rooms')[req.params.roomId]
-        var index = room.user.indexOf(req.user)
-        if(index > -1)
-            room.user.splice(index,1)
-        res.send(200)
+        for (var i = 0; i<room.user.length; i++) {
+                if (JSON.stringify(room.user[i]._id) === JSON.stringify(req.user._id)) {
+                    room.user.splice(i,1)
+                    console.log('removed '+req.user._id)
+                    break;
+                }
+        }
+        res.sendStatus(200)
     })
 
 };

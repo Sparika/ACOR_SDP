@@ -37,6 +37,7 @@ if (room !== '') {
 
 socket.on('created', function(room) {
   console.log('Created room ' + room);
+  registerOnRoom()
   isInitiator = true;
 });
 
@@ -52,12 +53,20 @@ socket.on('join', function (room){
 
 socket.on('joined', function(room) {
   console.log('joined: ' + room);
+  registerOnRoom()
   isChannelReady = true;
 });
 
 socket.on('log', function(array) {
   console.log.apply(console, array);
 });
+
+function registerOnRoom(){
+  var init = {method: 'PUT',
+                credentials: 'same-origin'}
+  fetch(window.location,init)
+  .then(res => sendMessage('registered'))
+}
 
 ////////////////////////////////////////////////
 
@@ -184,7 +193,7 @@ window.onbeforeunload = function() {
   var init = {method: 'DELETE',
                 credentials: 'same-origin'}
   fetch(window.location,init)
-  sendMessage('bye');
+  .then(res => sendMessage('bye'))
 };
 
 /////////////////////////////////////////////////////////

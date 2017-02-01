@@ -85,13 +85,21 @@ io.sockets.on('connection', function(socket) {
     //var numClients = io.sockets.sockets.length;
     //log('Room ' + room + ' now has ' + numClients + ' client(s)');
 
-    if (rooms[room].user.length < 2){
-      log('Client ID ' + socket.id + ' joined room ' + room);
-      io.sockets.in(room).emit('join', room);
-      socket.join(room);
-      //socket.emit('created', room, socket.id);
-    } else { // max two clients
-      socket.emit('full', room);
+    if(! rooms[room]){
+        rooms[room] = {user:[], name: room}
+    }
+    switch (rooms[room].user.length){
+        case 0:
+            socket.join(room);
+            io.sockets.in(room).emit('created', room);
+            break;
+        case 1:
+            socket.join(room);
+            socket.emit('joined', room)
+            socket.broadcast.to(room).emit('join', room);
+            break;
+        default:
+            socket.emit('full', room);
     }
   });
 

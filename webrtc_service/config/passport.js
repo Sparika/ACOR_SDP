@@ -208,7 +208,7 @@ module.exports = function(passport) {
                     // user already exists and is logged in, we have to link accounts
                     var user               = req.user; // pull the user out of the session
 
-                    user.jwt.id    = jwt_payload.id;
+                    user.jwt.id    = jwt_payload.sub;
                     user.jwt.token = btoa(JSON.stringify(jwt_payload));
                     user.jwt.iss  = jwt_payload.iss;
 
