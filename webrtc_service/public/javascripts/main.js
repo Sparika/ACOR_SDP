@@ -11,7 +11,7 @@ var turnReady;
 var pcConfig = {
   'iceServers': [{
     'url': 'stun:stun.l.google.com:19302'
-  }
+  },
   {
     "url": "stun:stun.sipgate.net"
   },
