@@ -118,7 +118,7 @@ module.exports = function(app, passport) {
         for (room in rooms){
             for(user in rooms[room].user){
                 if (JSON.stringify(rooms[room].user[user]._id) === JSON.stringify(req.params.userId)) {
-                    userInRoom['/room/'+rooms[room].name] = {type:'url'}
+                    userInRoom[rooms[room].name] = {type:'url', url:'/room/'+rooms[room].name}
                 }
             }
         }
