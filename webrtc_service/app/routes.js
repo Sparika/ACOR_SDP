@@ -86,7 +86,7 @@ module.exports = function(app, passport) {
     // connect jwt -----------------------------
 
         app.get('/auth/connect', passport.authenticate('jwt', {
-            successRedirect : '/room/42',
+            successRedirect : '/room/',
             failureRedirect : '/',
             failureFlash : true // allow flash messages
         }))
