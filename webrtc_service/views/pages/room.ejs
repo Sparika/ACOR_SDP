@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include ../partials/head %>
+    <style>
+    .videoContainer {
+        position: relative;
+    }
+    .localVideo {
+        height: 96px;
+        width: 128px;
+        position: absolute;
+    }
+    .remoteVideo {
+        width: auto;
+        height: auto;
+        position: absolute;
+    }
+    </style>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+  <h4><%= room %></h4>
+
+    <div class="row">
+        <div id="videos" class="col-sm-5 col-sm-offset-1 videoContainer">
+            <div class="embed-responsive embed-responsive-4by3">
+                <video id="remoteVideo" class="remoteVideo embed-responsive-item" autoplay></video>
+                <video id="localVideo" class="localVideo" autoplay muted></video>
+            </div>
+        </div>
+        <div class="col-sm-4 col-sm-offset-1">
+            <div class="well">
+                <h3>Look I'm A Sidebar!</h3>
+            </div>
+        </div>
+    </div>
+    </br>
+    <div class="form-group row justify-content-center" onSubmit="return raiseDistantACR()">
+        <label for="peer_acr" class="col-sm-1 col-sm-offset-1 col-form-label">Peer ACR: </label>
+        <div class="col-sm-1">
+            <input id="peer_acr" type="number" min="-1" max="4" step="1" value ="0" class="form-control"/>
+        </div>
+        <label for="peer_or" class="col-sm-1 col-form-label">Peer Id Origin : </label>
+        <div class="col-sm-1">
+            <input id="peer_or" type="text" value ="" class="form-control"/>
+        </div>
+        <div class="col-sm-1">
+            <input name="Submit"  type="submit" value="Request" class="btn btn-primary" id="inputBtn"/>
+        </div>
+    </div>
+
+  <script>
+  var room = "<%= room %>"
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/javascripts/lib/adapter_latest.js"></script>
+  <script src="/javascripts/main.js"></script>
+
+  <footer>
+    <% include ../partials/footer %>
+  </footer>
+</body>
+
+</html>

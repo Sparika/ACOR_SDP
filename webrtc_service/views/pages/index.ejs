@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+    <div>
+        <form action="/room/create" method="post">
+            <div class="form-group row justify-content-center">
+                <label class="col-sm-2 col-sm-offset-1 col-form-legend">Room</label>
+                <label class="col-sm-5 col-form-legend">Description</label>
+                <label class="col-sm-1 col-form-legend">Capacity</label>
+                </div>
+            </div>
+            <% if (message.length > 0) { %>
+                <div class="alert alert-danger"><%= message %></div>
+            <% } %>
+            <div class="form-group row justify-content-center">
+                <div class="col-sm-2 col-sm-offset-1">
+                    <input type="text" class="form-control" id="inputRoom" placeholder="Room name" name="room">
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="inputDescr" placeholder="Description" name="descr">
+                </div>
+                <label for="inputDescr" class="col-md-1 col-form-label">2</label>
+                <div class="col-sm-1">
+                    <button type="submit" class="btn btn-primary <%= user? "":"disabled"%> id="inputBtn">Create</button>
+                </div>
+            </div>
+        </form>
+        <% for(var i=0; i<rooms.length; i++) {%>
+            <% if(rooms[i]){ %>
+                <div class="row justify-content-center">
+                    <span class="col-sm-2 col-sm-offset-1"><%=rooms[i].name%></span>
+                    <span class="col-sm-5"><%=rooms[i].descr%></span>
+                    <span class="col-sm-1"><%= rooms[i].user.length%>/2</span>
+                    <% if(rooms[i].user.length < 2){%>
+                        <div class="col-sm-1">
+                            <a href="<%= '/room/'+rooms[i].name%>" class="btn btn-success <%= user? "":"disabled"%>" role="button">Join</a>
+                        </div>
+                    <% } else { %>
+                        <div class="col-sm-1">
+                            <a href="<%= '/room/'+rooms[i].name%>" class="btn btn-warning disabled" role="button">Full</a>
+                        </div>
+                    <% } %>
+                    <div class="col-sm-1">
+                         <button class="btn btn-danger <%= user? "":"disabled"%>" onclick="deleteRoom('<%=rooms[i].name%>');return false;">Delete</button>
+                    </div>
+            	</div>
+            <% } %>
+        <% } %>
+    </div>
+
+    <script>
+        function deleteRoom(roomId){
+            console.log('delete'+roomId)
+            var init = { method: 'DELETE',
+                         credentials: 'same-origin'};
+            fetch('/room/'+roomId,init)
+            .then(res => {location.reload();})
+        }
+    </script>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+</body>
+</html>

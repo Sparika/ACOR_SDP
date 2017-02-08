@@ -1,15 +1,21 @@
+var User       = require('../app/models/user');
+
 module.exports = function(app, passport) {
 
 // normal routes ===============================================================
 
     // show the home page (will also have our login links)
     app.get('/', function(req, res) {
-        res.render('index.ejs');
+        res.render('pages/index.ejs', {
+            user : req.user,
+            rooms: app.get('rooms'),
+            message: req.flash('roomMessage')
+        });
     });
 
     // PROFILE SECTION =========================
     app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile.ejs', {
+        res.render('pages/profile.ejs', {
             user : req.user
         });
     });
@@ -19,20 +25,6 @@ module.exports = function(app, passport) {
         req.logout();
         res.redirect('/');
     });
-
-    // ROOM ==============================
-    app.get('/room/', isLoggedIn, function(req, res){
-        res.render('rooms.ejs', {
-            user: req.user,
-            rooms: app.get('rooms')
-        });
-    })
-    app.get('/room/:roomId', isLoggedIn, function(req, res){
-        res.render('room.ejs', {
-            user: req.user,
-            room: req.params.roomId
-        });
-    })
 
     app.get('/error', function(req,res){
         console.log(req)
@@ -46,7 +38,7 @@ module.exports = function(app, passport) {
         // LOGIN ===============================
         // show the login form
         app.get('/login', function(req, res) {
-            res.render('login.ejs', { message: req.flash('loginMessage') });
+            res.render('pages/login.ejs', { message: req.flash('loginMessage') });
         });
 
         // process the login form
@@ -59,7 +51,7 @@ module.exports = function(app, passport) {
         // SIGNUP =================================
         // show the signup form
         app.get('/signup', function(req, res) {
-            res.render('signup.ejs', { message: req.flash('signupMessage') });
+            res.render('pages/signup.ejs', { message: req.flash('signupMessage') });
         });
 
         // process the signup form
@@ -75,7 +67,7 @@ module.exports = function(app, passport) {
 
     // locally --------------------------------
         app.get('/connect/local', function(req, res) {
-            res.render('connect-local.ejs', { message: req.flash('loginMessage') });
+            res.render('pages/connect-local.ejs', { message: req.flash('loginMessage') });
         });
         app.post('/connect/local', passport.authenticate('local-signup', {
             successRedirect : '/profile', // redirect to the secure profile section
@@ -86,7 +78,7 @@ module.exports = function(app, passport) {
     // connect jwt -----------------------------
 
         app.get('/auth/connect', passport.authenticate('jwt', {
-            successRedirect : '/room/',
+            successRedirect : '/',
             failureRedirect : '/',
             failureFlash : true // allow flash messages
         }))
@@ -112,45 +104,121 @@ module.exports = function(app, passport) {
 // =============================================================================
 // DOMAIN REGISTRY =============================================================
 // =============================================================================
+
+
     app.get('/registry/:userId', function(req,res){
+        var userId = req.params.userId
+        User.findOne({'_id':userId}, function(err, user){
+            if (err)
+                res.sendStatus(500)
+            if (user)
+                res.send(getAvailability(user._id))
+            else
+                res.sendStatus(404)
+        })
+    })
+
+    app.get('/registry/:domainId/:userId', function(req,res){
+        var userId = req.params.userId,
+            domainId = req.params.domainId
+        User.findOne({'jwt.sub':userId, 'jwt.iss':domainId}, function(err, user){
+            if (err)
+                res.sendStatus(500)
+            if (user){
+                res.send(getAvailability(user._id))
+            }
+            else
+                res.sendStatus(404)
+        })
+    })
+
+    function getAvailability(userId){
         var userInRoom = {},
             rooms = app.get('rooms')
+
         for (room in rooms){
             for(user in rooms[room].user){
-                if (JSON.stringify(rooms[room].user[user]._id) === JSON.stringify(req.params.userId)) {
+                if (JSON.stringify(rooms[room].user[user]._id) === JSON.stringify(userId)) {
                     userInRoom[rooms[room].name] = {type:'url', url:'/room/'+rooms[room].name}
                 }
             }
         }
-        res.send(userInRoom)
-    })
+        return userInRoom
+    }
 
-    app.put('/room/:roomId', isLoggedIn, function(req, res){
-        res.sendStatus(200)
+        // process the login form
+    app.post('/room/create', isLoggedIn, function(req, res) {
+        var rooms = app.get('rooms'),
+            roomId = req.body.room,
+            descr = req.body.descr
+        if(! rooms[roomId]){
+            console.log('Create '+roomId)
+            rooms[roomId] = {
+                user:[],
+                name: roomId,
+                socket:[],
+                descr:descr
+            }
+            res.redirect('/room/'+roomId)
+        } else {
+            req.flash('roomMessage', 'Room '+roomId+' already exists.');
+            res.redirect('/');
+        }
+    });
+
+
+    // ROOM ==============================
+    app.get('/room/:roomId', isLoggedIn, function(req, res){
         var rooms = app.get('rooms'),
             roomId = req.params.roomId,
             user = req.user
         if(! rooms[roomId]){
-           rooms[roomId] = {user:[], name: roomId}
+            console.log('Get '+roomId)
+            rooms[roomId] = {
+                user:[],
+                name: roomId,
+                socket:[]
+            }
         }
         if(rooms[roomId].user.length<2){
             rooms[roomId].user.push(user)
-            console.log('added '+user._id+' there is '+rooms[roomId].user.length)
+            console.log('Added user to room')
+            console.log(rooms[roomId].user.length)
+            res.render('pages/room.ejs', {
+                user: req.user,
+                room: req.params.roomId
+            });
+        } else {
+            req.flash('roomMessage', 'Room '+roomId+' is full.');
+            res.redirect('/');
         }
     })
 
     app.delete('/room/:roomId', isLoggedIn, function(req,res){
+        var rooms = app.get('rooms')
+            room = rooms[req.params.roomId],
+            index = rooms.indexOf(req.params.roomId)
+
+        rooms.splice(index,1)
         res.sendStatus(200)
-        var room = app.get('rooms')[req.params.roomId]
-        for (var i = 0; i<room.user.length; i++) {
-                if (JSON.stringify(room.user[i]._id) === JSON.stringify(req.user._id)) {
-                    room.user.splice(i,1)
-                    console.log('removed '+req.user._id)
-                    break;
-                }
+        for (var i = 0; i<room.socket.length; i++) {
+            room.socket[i].emit('deleted', req.params.roomId)
         }
     })
 
+    app.delete('/room/:roomId/user/me', isLoggedIn, function(req,res){
+        res.sendStatus(200)
+        var room = app.get('rooms')[req.params.roomId]
+        if(room){
+            for (var i = 0; i<room.user.length; i++) {
+                    if (JSON.stringify(room.user[i]._id) === JSON.stringify(req.user._id)) {
+                        room.user.splice(i,1)
+                        //We remove only the first
+                        break;
+                    }
+            }
+        }
+    })
 };
 
 // route middleware to ensure user is logged in

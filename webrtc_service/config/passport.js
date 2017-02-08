@@ -167,7 +167,7 @@ module.exports = function(passport) {
                 // check if the user is already logged in
                 if (!req.user) {
 
-                    User.findOne({ 'jwt.id' : jwt_payload.sub }, function(err, user) {
+                    User.findOne({ 'jwt.sub' : jwt_payload.sub }, function(err, user) {
                         if (err)
                             return done(err);
 
@@ -190,9 +190,9 @@ module.exports = function(passport) {
                         } else {
                             var newUser          = new User();
 
-                            newUser.jwt.id    = jwt_payload.sub;
+                            newUser.jwt.sub    = jwt_payload.sub;
                             newUser.jwt.token = btoa(JSON.stringify(jwt_payload));
-                            newUser.jwt.iss  = jwt_payload.sub;
+                            newUser.jwt.iss  = jwt_payload.iss;
 
                             newUser.save(function(err) {
                                 if (err)
@@ -208,7 +208,7 @@ module.exports = function(passport) {
                     // user already exists and is logged in, we have to link accounts
                     var user               = req.user; // pull the user out of the session
 
-                    user.jwt.id    = jwt_payload.sub;
+                    user.jwt.sub    = jwt_payload.sub;
                     user.jwt.token = btoa(JSON.stringify(jwt_payload));
                     user.jwt.iss  = jwt_payload.iss;
 

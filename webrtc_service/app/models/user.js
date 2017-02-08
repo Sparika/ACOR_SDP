@@ -10,9 +10,9 @@ var userSchema = mongoose.Schema({
         password     : String
     },
     jwt              : {
-        id           : String,
-        token        : String,
-        iss          : String
+        sub           : String,
+        iss          : String,
+        token        : String
     }
 
 });

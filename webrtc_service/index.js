@@ -84,27 +84,12 @@ io.sockets.on('connection', function(socket) {
       socket.broadcast.in(message.room).emit('message', message.message);
   });
 
-  socket.on('create or join', function(room) {
-    log('Received request to create or join room ' + room);
-    //var numClients = io.sockets.sockets.length;
-    //log('Room ' + room + ' now has ' + numClients + ' client(s)');
-
-    if(! rooms[room]){
-        rooms[room] = {user:[], name: room}
-    }
-    switch (rooms[room].user.length){
-        case 0:
-            socket.join(room);
-            io.sockets.in(room).emit('created', room);
-            break;
-        case 1:
-            socket.join(room);
-            socket.emit('joined', room)
-            socket.broadcast.to(room).emit('join', room);
-            break;
-        default:
-            socket.emit('full', room);
-    }
+  socket.on('join', function(room) {
+    log('Received request to join room ' + room);
+    socket.join(room);
+    rooms[room].socket.push(socket)
+    socket.emit('joined', room)
+    socket.broadcast.to(room).emit('join', room);
   });
 
   socket.on('ipaddr', function() {

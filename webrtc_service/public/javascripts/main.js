@@ -54,15 +54,9 @@ var sdpConstraints = {
 var socket = io.connect();
 
 if (room !== '') {
-  socket.emit('create or join', room);
-  console.log('Attempted to create or  join room', room);
+  socket.emit('join', room);
+  console.log('Attempted to join room', room);
 }
-
-socket.on('created', function(room) {
-  console.log('Created room ' + room);
-  registerOnRoom()
-  isInitiator = true;
-});
 
 socket.on('full', function(room) {
   console.log('Room ' + room + ' is full');
@@ -71,12 +65,12 @@ socket.on('full', function(room) {
 socket.on('join', function (room){
   console.log('Another peer made a request to join room ' + room);
   console.log('This peer is the initiator of room ' + room + '!');
+  isInitiator = true;
   isChannelReady = true;
 });
 
 socket.on('joined', function(room) {
   console.log('joined: ' + room);
-  registerOnRoom()
   isChannelReady = true;
 });
 
@@ -84,12 +78,10 @@ socket.on('log', function(array) {
   console.log.apply(console, array);
 });
 
-function registerOnRoom(){
-  var init = {method: 'PUT',
-                credentials: 'same-origin'}
-  fetch(window.location,init)
-  .then(res => sendMessage('registered'))
-}
+socket.on('deleted', function(room) {
+  console.log('deleted ??')
+  window.location.href = "/"
+})
 
 ////////////////////////////////////////////////
 
@@ -215,7 +207,7 @@ function maybeStart() {
 window.onbeforeunload = function() {
   var init = {method: 'DELETE',
                 credentials: 'same-origin'}
-  fetch(window.location,init)
+  fetch(window.location+'/user/me',init)
   .then(res => sendMessage('bye'))
 };
 
