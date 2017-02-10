@@ -34,8 +34,9 @@
             </div>
         </div>
         <div class="col-sm-4 col-sm-offset-1">
-            <div class="well">
-                <h3>Look I'm A Sidebar!</h3>
+            <div class="well container">
+                <span class="row" id="peerIdentity"></span>
+                <span class="row" id="peerIdentityProvider"></span>
             </div>
         </div>
     </div>
@@ -50,7 +51,7 @@
             <input id="peer_or" type="text" value ="" class="form-control"/>
         </div>
         <div class="col-sm-1">
-            <input name="Submit"  type="submit" value="Request" class="btn btn-primary" id="inputBtn"/>
+            <input name="Submit"  value="Request" class="btn btn-primary" id="inputBtn" onclick="raiseDistantACR();return false;">/>
         </div>
     </div>
 
