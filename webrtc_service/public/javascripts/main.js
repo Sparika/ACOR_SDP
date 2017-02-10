@@ -114,7 +114,8 @@ socket.on('message', function(message) {
                 console.error(error)
             })
             .then(res => {
-                document.getElementById('peerId').innerHTML= 'Peer identity is '+res.name+' verified by '+res.idp+'.';
+                document.getElementById('peerIdentity').innerHTML= res.name;
+                document.getElementById('peerIdentityProvider').innerHTML= res.idp;
             })
         }
         doAnswer();
@@ -135,7 +136,8 @@ socket.on('message', function(message) {
                 console.error(error)
             })
             .then(res => {
-                document.getElementById('peerId').innerHTML= 'Peer identity is '+res.name+' verified by '+res.idp+'.';
+                document.getElementById('peerIdentity').innerHTML= res.name;
+                document.getElementById('peerIdentityProvider').innerHTML= res.idp;
             })
         }
     })
