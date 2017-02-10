@@ -17,14 +17,6 @@
         position: absolute;
     }
     </style>
-
-
-    <script>
-        var room = "<%= room %>"
-    </script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/javascripts/lib/adapter_latest.js"></script>
-    <script src="/javascripts/main.js"></script>
 </head>
 <body class="container">
 
@@ -65,6 +57,12 @@
   <footer>
     <% include ../partials/footer %>
   </footer>
+    <script>
+        var room = "<%= room %>"
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/lib/adapter_latest.js"></script>
+    <script src="/javascripts/main.js"></script>
 </body>
 
 </html>
