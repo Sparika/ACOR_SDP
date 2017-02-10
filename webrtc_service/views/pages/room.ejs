@@ -17,6 +17,14 @@
         position: absolute;
     }
     </style>
+
+
+    <script>
+        var room = "<%= room %>"
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/lib/adapter_latest.js"></script>
+    <script src="/javascripts/main.js"></script>
 </head>
 <body class="container">
 
@@ -24,7 +32,7 @@
         <% include ../partials/header %>
     </header>
 
-  <h4><%= room %></h4>
+    <h4><%= room %></h4>
 
     <div class="row">
         <div id="videos" class="col-sm-5 col-sm-offset-1 videoContainer">
@@ -54,14 +62,6 @@
             <button class="btn btn-primary" onclick="raiseDistantACR();return false;">Register</button>
         </div>
     </div>
-
-  <script>
-  var room = "<%= room %>"
-  </script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/javascripts/lib/adapter_latest.js"></script>
-  <script src="/javascripts/main.js"></script>
-
   <footer>
     <% include ../partials/footer %>
   </footer>
