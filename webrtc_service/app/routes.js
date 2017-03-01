@@ -110,21 +110,21 @@ module.exports = function(app, passport) {
         var userId = req.params.userId
         User.findOne({'_id':userId}, function(err, user){
             if (err)
-                res.sendStatus(500)
-            if (user)
+                res.status(500).send(err)
+            else if (user)
                 res.send(getAvailability(user._id))
             else
                 res.sendStatus(404)
         })
     })
 
-    app.get('/registry/:domainId/:userId', function(req,res){
-        var userId = req.params.userId,
+    app.get('/registry/:domainId/:userDomainId', function(req,res){
+        var userId = req.params.userDomainId,
             domainId = req.params.domainId
         User.findOne({'jwt.sub':userId, 'jwt.iss':domainId}, function(err, user){
             if (err)
-                res.sendStatus(500)
-            if (user){
+                res.status(500).send(err)
+            else if (user){
                 res.send(getAvailability(user._id))
             }
             else
