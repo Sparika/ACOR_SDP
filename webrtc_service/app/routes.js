@@ -108,7 +108,11 @@ module.exports = function(app, passport) {
 
     app.get('/registry/:userId', function(req,res){
         var userId = req.params.userId
-        User.findOne({'_id':userId}, function(err, user){
+        User.findOne({$or:[
+                         {'_id':userId},
+                         {'local.email':userId}
+                       ]}
+        , function(err, user){
             if (err)
                 res.status(500).send(err)
             else if (user)
