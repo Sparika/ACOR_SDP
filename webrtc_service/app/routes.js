@@ -1,6 +1,109 @@
 var User       = require('../app/models/user');
 
+var asserid    = require('../app/models/idAssertion');
+
+
+
+var express    = require('express');
+var bodyParser = require('body-parser');
+var mongoose   = require ('mongoose');
+
+
+
+
 module.exports = function(app, passport) {
+
+
+
+//==================route 1 =================================
+    app.use(bodyParser.json());
+
+    app.get('/assertion', function (req, res) {
+
+        asserid.getAssertion(function (err, asser) {
+            if (err) { throw err; }
+            res.json(asser);
+        })
+    });
+
+
+    /*app.get('/getassertion/:_id', function (req, res) {
+
+        var requestid = req.param.id;
+        asserid.getAssertionById(requestid,function (err, assertion) {
+            if (err) { throw err; }
+            res.json(assertion);
+        })
+    });*/
+
+
+
+    app.get('/assertion/:id', function(req,res){
+
+
+        //if (typeof(req.session.user) !== 'undefined')
+
+        asserid.findOne({$or:[
+                {'_id':req.params.id}
+            ]}
+            , function(err, asserid){
+                if (err)
+                    res.status(500).send(err);
+                else if (asserid)
+
+                    res.json(asserid);
+                else
+                    res.sendStatus(404)
+            })
+    });
+
+
+    /*app.post('/assertion',function (req, res) {
+
+        //var us = req.body.content;
+        //var ct = req.body.user;
+
+        var re = req.body;
+
+        //(JSON.stringify(us));
+
+        if (typeof(req.user) !== 'undefined');
+        //else
+
+            //if((JSON.stringify(us)) != req.user.local.login)
+
+        asserid.addAssertion(re,function (err, re) {
+
+            if (err) { throw err; }
+            res.json(re);
+        })
+    });*/
+
+    app.post('/assertion', isLoggedIn ,function (req, res) {
+
+        var gn = req.body;
+
+        console.log(req.session);
+
+        if ((typeof(req.user) !== 'undefined') && (req.user.local.email == req.body.user)){
+            asserid.addAssertion(gn,function (err, gn) {
+
+                if (err) { throw err; }
+                res.json(gn);
+            })
+        }
+        else {
+            console.log('login is required or false')
+        }
+
+    });
+
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------
 
 // normal routes ===============================================================
 
@@ -20,6 +123,7 @@ module.exports = function(app, passport) {
         });
     });
 
+
     // LOGOUT ==============================
     app.get('/logout', function(req, res) {
         req.logout();
@@ -28,7 +132,7 @@ module.exports = function(app, passport) {
 
     app.get('/error', function(req,res){
         console.log(req)
-    })
+    });
 
 // =============================================================================
 // AUTHENTICATE (FIRST LOGIN) ==================================================
@@ -114,13 +218,13 @@ module.exports = function(app, passport) {
                        ]}
         , function(err, user){
             if (err)
-                res.status(500).send(err)
+                res.status(500).send(err);
             else if (user)
-                res.send(getAvailability(user._id))
+                res.send(getAvailability(user._id));
             else
                 res.sendStatus(404)
         })
-    })
+    });
 
     app.get('/registry/:domainId/:userDomainId', function(req,res){
         var userId = req.params.userDomainId,
@@ -134,7 +238,7 @@ module.exports = function(app, passport) {
             else
                 res.sendStatus(404)
         })
-    })
+    });
 
     function getAvailability(userId){
         var userInRoom = {},
@@ -196,7 +300,7 @@ module.exports = function(app, passport) {
             req.flash('roomMessage', 'Room '+roomId+' is full.');
             res.redirect('/');
         }
-    })
+    });
 
     app.delete('/room/:roomId', isLoggedIn, function(req,res){
         var rooms = app.get('rooms')
@@ -208,7 +312,7 @@ module.exports = function(app, passport) {
         for (var i = 0; i<room.socket.length; i++) {
             room.socket[i].emit('deleted', req.params.roomId)
         }
-    })
+    });
 
     app.delete('/room/:roomId/user/me', isLoggedIn, function(req,res){
         res.sendStatus(200)
