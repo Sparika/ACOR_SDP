@@ -30,10 +30,11 @@ var assertion = module.exports = mongoose.model('assertion',idAssertion);
         //var users = user.find();
 
     };
+
+
     /*module.exports.getAssertionById = function (id, callback) {
         assertion.findById(id,callback);
-
-};
+    };
 */
 
 
