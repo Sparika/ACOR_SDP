@@ -1,109 +1,62 @@
-var User       = require('../app/models/user');
-
-var asserid    = require('../app/models/idAssertion');
-
-
-
-var express    = require('express');
+var User = require('../app/models/user');
+var asserid = require('../app/models/idAssertion');
+var express = require('express');
 var bodyParser = require('body-parser');
-var mongoose   = require ('mongoose');
+var mongoose = require('mongoose');
+var fs = require('fs');
 
 
-
-
-module.exports = function(app, passport) {
-
-
-
-//==================route 1 =================================
+module.exports = function (app, passport) {
+    // local ipdProxy routes ===============================================================
     app.use(bodyParser.json());
-
     app.get('/assertion', function (req, res) {
-
         asserid.getAssertion(function (err, asser) {
-            if (err) { throw err; }
+            if (err) {
+                throw err;
+            }
             res.json(asser);
         })
     });
-
-
-    /*app.get('/getassertion/:_id', function (req, res) {
-
-        var requestid = req.param.id;
-        asserid.getAssertionById(requestid,function (err, assertion) {
-            if (err) { throw err; }
-            res.json(assertion);
+    app.get('/assertion/:id', function (req, res) {
+        asserid.findOne({
+            $or: [
+                {
+                    '_id': req.params.id
+                }
+            ]
+        }, function (err, asserid) {
+            if (err)
+                res.status(500).send(err);
+            else if (asserid) {
+                console.log(asserid)
+                var confirm = {
+                    identity: asserid.user.split('@') [0] + '@localhost:4041',
+                    contents: asserid.content
+                }
+                res.json(confirm);
+            }
+            else
+                res.sendStatus(404)
         })
-    });*/
-
-
-
-    app.get('/assertion/:id', function(req,res){
-
-
-        //if (typeof(req.session.user) !== 'undefined')
-
-        asserid.findOne({$or:[
-                {'_id':req.params.id}
-            ]}
-            , function(err, asserid){
-                if (err)
-                    res.status(500).send(err);
-                else if (asserid)
-
-                    res.json(asserid);
-                else
-                    res.sendStatus(404)
-            })
     });
-
-
-    /*app.post('/assertion',function (req, res) {
-
-        //var us = req.body.content;
-        //var ct = req.body.user;
-
-        var re = req.body;
-
-        //(JSON.stringify(us));
-
-        if (typeof(req.user) !== 'undefined');
-        //else
-
-            //if((JSON.stringify(us)) != req.user.local.login)
-
-        asserid.addAssertion(re,function (err, re) {
-
-            if (err) { throw err; }
-            res.json(re);
-        })
-    });*/
-
-    app.post('/assertion', isLoggedIn ,function (req, res) {
-
+    app.post('/assertion', isLoggedIn, function (req, res) {
         var gn = req.body;
-
         console.log(req.session);
-
-        if ((typeof(req.user) !== 'undefined') && (req.user.local.email == req.body.user)){
-            asserid.addAssertion(gn,function (err, gn) {
-
-                if (err) { throw err; }
+        if (typeof (req.user) !== 'undefined') {
+            gn.user = req.user.local.email
+            asserid.addAssertion(gn, function (err, gn) {
+                if (err) {
+                    throw err;
+                }
                 res.json(gn);
             })
         }
         else {
             console.log('login is required or false')
         }
-
     });
+    app.use(express.static('public')); //get proxy
 
-
-
-
-
-
-//--------------------------------------------------------------------------------------------------
 
 // normal routes ===============================================================
 
