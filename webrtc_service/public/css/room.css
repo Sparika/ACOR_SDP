@@ -1,0 +1,211 @@
+@font-face
+{
+    font-family: 'Junction-regular';
+    src: url("../css/Junction-regular.otf");
+
+}
+
+body{
+    font-family:'Junction-regular';
+}
+
+.localVideo {
+    height: 96px;
+    width:    128px;;
+    position: absolute;
+    margin-left:5px;
+    border : 2px solid grey;
+    left:-5px;
+}
+
+.remoteVideo {
+    width: auto;
+    height: auto;
+    position: absolute;
+}
+
+
+.sidenav {
+    height: 20%;
+    width:  88%;
+    position: absolute;
+    Bottom: 5px;
+    left:20px;
+}
+
+.glyphicon.glyphicon-phone-alt {
+    font-size: 30px;
+    color: #DF013A;
+    padding:20px;
+
+}
+
+.glyphicon.glyphicon-bullhorn {
+    font-size: 30px;
+    color: Black;
+    padding:20px;
+
+}
+
+.glyphicon.glyphicon-th-large {
+    font-size: 25px;
+    color: black;
+    padding:20px;
+}
+#start{
+    position:relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (max-height: 1200px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+.sidenav{
+    text-align: center;
+
+
+    width:1200px;
+    height:90px;
+    margin-left:-60px;
+    margin-bottom:-5px;
+
+}
+
+
+
+.overlay {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.9);
+    overflow-x: hidden;
+    transition: 0.2s;
+}
+
+.overlay-content {
+    position: relative;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.overlay a {
+    padding: 8px;
+    text-decoration: none;
+    font-size: 36px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.overlay a:hover, .overlay a:focus {
+    color: #f1f1f1;
+}
+
+
+
+@media screen and (max-height: 450px) {
+    .overlay a {font-size: 20px}
+    .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
+    }
+}
+
+#zone{
+    height:230px;
+    background:#f9f9fD;
+    padding: 27px 25px;
+    box-shadow: 0px 6px 6px 3px #f1f1f1;
+}
+
+
+
+div#zone:hover {
+    background-color:#f9f9f9;
+}
+
+
+
+
+
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    height: 100%;
+    margin: 8px 0;
+    box-shadow: 0.5px 0px 0px 0.5px #f1f1f1;
+    border: 0.5px solid #f1f1f1;
+    border-radius: 0px;
+}
+
+input[type=number] {
+    width: 100%;
+    height: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-shadow: 0.5px 0px 0px 0.5px #f1f1f1;
+    border: 0.5px solid #f1f1f1;
+    border-radius: 0px;
+}
+
+#btn{
+    width: 100%;
+    height:47px;
+    font-family: Junction-regular;
+    font-size:16px;
+    padding: 12px 0px;
+    margin: 34.5px 0;
+    box-shadow: 0.5px 0px 0px 0.5px #f1f1f1;
+    border: 0.5px solid #f1f1f1;
+    border-radius: 0px;
+
+
+}
+
+
+
+.bg-4 {
+    background-color: #f9f9fD; /* Black Gray */
+    color: #fff;
+    padding-top:    20px;
+    padding-bottom: 20px;
+}
+
+.glyphicon.glyphicon-home {
+    font-size: 25px;
+    color: black;
+    padding:10px;
+    margin-top:-13px;
+    margin-bottom: -5px;
+}
+
+.glyphicon.glyphicon-user {
+    font-size: 25px;
+    color: black;
+    padding:10px;
+    margin-top:-13px;
+    margin-bottom: -5px;
+}
+
+.glyphicon.glyphicon-off {
+    font-size: 25px;
+    color: black;
+    padding:10px;
+    margin-top:-13px;
+    margin-bottom: -5px;
+}
+
+
+.embed-responsive-4by3 {
+    padding-bottom: -75%;
+}
