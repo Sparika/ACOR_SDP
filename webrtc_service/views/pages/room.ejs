@@ -1,68 +1,135 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <% include ../partials/head %>
-    <style>
-    .videoContainer {
-        position: relative;
-    }
-    .localVideo {
-        height: 96px;
-        width: 128px;
-        position: absolute;
-    }
-    .remoteVideo {
-        width: auto;
-        height: auto;
-        position: absolute;
-    }
-    </style>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../css/room.css" />
 </head>
-<body class="container">
 
-    <header>
-        <% include ../partials/header %>
-    </header>
 
-    <h4><%= room %></h4>
+<body>
 
-    <div class="row">
-        <div id="videos" class="col-sm-5 col-sm-offset-1 videoContainer">
-            <div class="embed-responsive embed-responsive-4by3">
-                <video id="remoteVideo" class="remoteVideo embed-responsive-item" autoplay></video>
-                <video id="localVideo" class="localVideo" autoplay muted></video>
-            </div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" style="color: black;font-weight: bold;margin-top:5px;">ACOR WebRTC</a>
         </div>
-        <div class="col-sm-4 col-sm-offset-1">
-            <div class="well container">
-                <span class="row" id="peerIdentity"></span>
-                <span class="row" id="peerIdentityProvider"></span>
-            </div>
+        <ul class="nav navbar-nav">
+          <li><a href="/"><span class="glyphicon glyphicon-home"></span>Home</a></li>
+
+     	<% if (user) {%>
+            <li><a href="/profile"><span class="glyphicon glyphicon-user"></span><%=user.local.email || user.jwt.sub%></a></li>
+            <% } %>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+    	<% if(user){%>
+          <li><a href="/logout"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
+    	<% } %>
+
+        </ul>
+      </div>
+    </nav>
+
+
+<div class="container text-center">
+<h4>Room ID : <%= room %></h4>
+</div>
+
+<div class="container" >
+    <div id="Container" class="embed-responsive embed-responsive-4by3" onmouseover="openNav()"  onmouseout="closeNav()" style="height:500px;">
+    <video id="remoteVideo" class="remoteVideo embed-responsive-item" autoplay></video>
+    <video  id="localVideo" class="localVideo" controls autoplay ></video>
+
+        <div id="mySidenav" class="sidenav">
+        <ul id="video-controls" class="ct">
+            <span id="stop" onclick="hangup()" class="glyphicon glyphicon-phone-alt"></span>
+            <span id="mute" class="glyphicon glyphicon glyphicon-bullhorn"></span>
+            <span id="fs"   class="glyphicon  glyphicon glyphicon-th-large"></span>
+        </ul>
         </div>
     </div>
-    </br>
-    <div class="form-group row justify-content-center" onSubmit="return raiseDistantACR()">
-        <label for="peer_acr" class="col-sm-1 col-sm-offset-1 col-form-label">Peer ACR: </label>
-        <div class="col-sm-1">
-            <input id="peer_acr" type="number" min="-1" max="4" step="1" value ="0" class="form-control"/>
-        </div>
-        <label for="peer_or" class="col-sm-1 col-form-label">Peer Id Origin : </label>
-        <div class="col-sm-1">
-            <input id="peer_or" type="text" value ="" class="form-control"/>
-        </div>
-        <div class="col-sm-1">
-            <button class="btn btn-primary" onclick="raiseDistantACR();return false;">Register</button>
+</div>
+
+<div>
+	<div class="container" >
+		<div  class="row centered" style="padding-right:17px;padding-left:17px;">
+			<div id="zone" class="col-md-4">
+			<i class="glyphicon glyphicon-tag"></i>
+			<h4 style="font-family: Junction-regular;">Autority</h4>
+			<p>Service:</p> <br/>
+			<p>Idp:</p> <br/>
+			<p>Algorithme:</p> <br/>
+     		</div>
+
+			<div id="zone" class="col-md-4">
+			<i class="glyphicon glyphicon-edit"></i>
+			<h4 style="font-family: Junction-regular;">Score</h4>
+			</div>
+
+			<div id="zone" class="col-md-4">
+			<i class="glyphicon glyphicon-earphone"></i>
+			<h4 style="font-family: Junction-regular;">information caller</h4>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="container" style="padding-top:50px;">
+	<div class="row centered">
+ 		<div class="col-md-2" onSubmit="return raiseDistantACR()">
+  		<h5 style="font-family: Junction-regular;">Peer ACR:</h5>
+		<input id="peer_acr" type="number" min="-1" max="4" step="1" value ="0" class="form-control"/>
+		</div>
+
+ 		<div  class="col-md-8">
+  		<h5 style="font-family: Junction-regular;">Peer Id Origin :</h5>
+		<input id="peer_or" type="text" value ="" class="form-control"/>
+		</div>
+
+		<div  class="col-md-2">
+		<button id="btn" type="button" class="btn btn-secondary" onclick="raiseDistantACR();return false;">Register</button>
+		</div>
+	</div>
+</div>
+
+
+<div class="container">
+    <div id="feedback" class="overlay">
+    <a href="javascript:void(0)" ></a>
+        <div class="overlay-content">
+        <a> are your staisfaite about the identity caller?</a>
+        <a id="yes"href="#" onclick="closeY()">yes</a>
+        <a id="no"href="#"onclick="closeN()">no</a>
         </div>
     </div>
-  <footer>
-    <% include ../partials/footer %>
-  </footer>
+</div>
+
+
+
+<div class="container">
+    <h2>console:</h2>
+    <p id="display"> <br>
+    <p id="display2"> <br>
+    <p id="display3"> <br>
+    </p>
+</div>
+
+
+    <footer class="container-fluid bg-4 text-center footer navbar-fixed-bottom" fixed>
+    <p><br/><a class="btn btn-theme">© Copyright 2017 Orange Labs</a></p>
+    </footer>
+
+
     <script>
         var room = "<%= room %>"
     </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/lib/adapter_latest.js"></script>
     <script src="/javascripts/main.js"></script>
+
 </body>
 
 </html>
