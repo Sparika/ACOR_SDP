@@ -18,7 +18,11 @@ function addAssertion(content) {
             'content': content
         })
     })
-}/*
+}
+
+
+
+/*
  **
  Generate & Validate assertion
  **
@@ -65,3 +69,4 @@ if (typeof rtcIdentityProvider != 'undefined') {
 } else {
     console.warn('IdP not running in the right sandbox');
 }
+
