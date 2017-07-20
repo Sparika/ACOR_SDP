@@ -1,0 +1,105 @@
+@font-face
+{
+    font-family: 'Junction-regular';
+    src: url("../css/Junction-regular.otf");
+
+}
+
+body{
+    font-family: Junction-regular;
+}
+
+.glyphicon.glyphicon-home {
+    font-size: 25px;
+    color: black;
+    padding:10px;
+    margin-top:-13px;
+    margin-bottom: -5px;
+}
+
+.glyphicon.glyphicon-user {
+    font-size: 25px;
+    color: black;
+    padding:10px;
+    margin-top:-13px;
+    margin-bottom: -5px;
+}
+
+.glyphicon.glyphicon-off {
+    font-size: 25px;
+    color: black;
+    padding:10px;
+    margin-top:-13px;
+    margin-bottom: -5px;
+}
+
+.button{
+    width: 100%;
+    border: 1px solid #008CBA;
+    color: black;
+    background-color: white;
+    font-size:16px;
+    padding: 12px 0px;
+    box-shadow: 0.5px 0px 0px 0.5px #f1f1f1;
+    border-radius: 0px;
+
+}
+
+
+
+.button:hover {
+    background-color: #008CBA;
+    color: white;
+}
+
+
+
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    height: 100%;
+    margin: 8px 0;
+    box-shadow: 0.5px 0px 0px 0.5px #f1f1f1;
+    border: 0.5px solid #f1f1f1;
+    border-radius: 0px;
+}
+
+input[type=number] {
+    width: 100%;
+    height: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-shadow: 0.5px 0px 0px 0.5px #f1f1f1;
+    border: 0.5px solid #f1f1f1;
+    border-radius: 0px;
+}
+
+
+.sidenav {
+    height: 20%;
+    width:  70%;
+    position: absolute;
+    Bottom: 5px;
+    left:20px;
+}
+
+.bg-4 {
+    background-color: #f9f9fD;
+    color: #fff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.buttonD {
+    background-color: #f44336;
+    border: none;
+    color: white;
+    padding: 2px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 1px;
+    cursor: pointer;
+
+}
