@@ -1,4 +1,5 @@
 // config/database.js
+
 env = process.env.NODE_ENV || 'development';
 
 module.exports = {
