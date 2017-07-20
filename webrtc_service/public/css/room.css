@@ -10,18 +10,19 @@ body{
 }
 
 .localVideo {
-    height: 96px;
-    width:    128px;;
     position: absolute;
-    margin-left:5px;
-    border : 2px solid grey;
-    left:-5px;
+    top: 0px;
+    left:0px ;
+    height: 96px;
+    width: 128px;
+
 }
 
 .remoteVideo {
-    width: auto;
+    visibility: hidden;
+    position: relative;
+    width: 100%;
     height: auto;
-    position: absolute;
 }
 
 
@@ -40,6 +41,25 @@ body{
 
 }
 
+.glyphicon-play-circle{
+    font-size: 100px;
+    color: Black;
+
+}
+
+#start{
+    position: absolute;
+    left:47%;
+    right:50%;
+    top:20%;
+}
+#conv{
+    position: absolute;
+    left:47%;
+    right:50%;
+    bottom:61%;
+    font-size: 22px;
+}
 .glyphicon.glyphicon-bullhorn {
     font-size: 30px;
     color: Black;
@@ -52,11 +72,7 @@ body{
     color: black;
     padding:20px;
 }
-#start{
-    position:relative;
-    margin-left: auto;
-    margin-right: auto;
-}
+
 
 @media screen and (max-height: 1200px) {
     .sidenav {padding-top: 15px;}
@@ -209,3 +225,100 @@ input[type=number] {
 .embed-responsive-4by3 {
     padding-bottom: -75%;
 }
+
+
+
+
+
+
+.popover-title {
+    color: Black;
+    font-size: 15px;
+    text-align: center;
+}
+
+.popover-content {
+    color: Black;
+    font-size: 14px;
+}
+
+
+
+
+
+
+.overlay2 {
+    height: 45%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+    background-color:#f2f2f2;
+    overflow-x: hidden;
+    box-shadow: -3px 4px 2px 2px #f2f2f2;
+}
+
+.overlay-content2 {
+    position: relative;
+    top:5%;
+    width: 100%;
+    text-align: left;
+    margin-top: 5px;
+    margin-left:40px;
+    margin-bottom: 0px;
+    font-size: 14px;
+}
+
+.overlay2 a {
+    padding: 8px;
+    text-decoration: none;
+    font-size: 17px;
+    color: black;
+    display: block;
+    transition: 0.3s;
+}
+
+.overlay2 a:hover, .overlay a:focus {
+    color: black;
+}
+
+
+ul.cd-buttons {
+    list-style-type: none;
+    margin-bottom: 0px;
+    padding: 0;
+    overflow: hidden;
+    background-color: #F2F2F2;
+    position: relative;
+    width: 100%;
+    height: 9%;
+    bottom: -18%;
+}
+
+li.first {
+    float: left;
+    width: 50%;
+
+}
+li.second{
+    float: right;
+    width: 50%;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 1px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: orangered;
+}
+
+.active {
+    background-color: #4CAF50;
+}
+
