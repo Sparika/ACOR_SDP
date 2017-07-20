@@ -3,59 +3,81 @@
 <head>
     <% include ../partials/head %>
 </head>
-<body class="container">
+
+<body>
 
     <header>
         <% include ../partials/header %>
+
     </header>
-    <div>
-        <form action="/room/create" method="post">
-            <div class="form-group row justify-content-center">
-                <label class="col-sm-2 col-sm-offset-1 col-form-legend">Room</label>
-                <label class="col-sm-5 col-form-legend">Description</label>
-                <label class="col-sm-1 col-form-legend">Capacity</label>
-                </div>
-            </div>
+
+    <div class="container" style="padding-top:50px;">
+
+
+             <div class="row">
+                <label class="col-sm-3">Room</label>
+                <label class="col-sm-6" >Description</label>
+                <label class="col-sm-1">Capacity</label>
+                <label class="col-sm-2">Create Room</label>
+             </div>
+
+    </div>
+
+    <div class="container">
+
             <% if (message.length > 0) { %>
                 <div class="alert alert-danger"><%= message %></div>
             <% } %>
-            <div class="form-group row justify-content-center">
-                <div class="col-sm-2 col-sm-offset-1">
-                    <input type="text" class="form-control" id="inputRoom" placeholder="Room name" name="room">
-                </div>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" id="inputDescr" placeholder="Description" name="descr">
-                </div>
-                <label for="inputDescr" class="col-md-1 col-form-label">2</label>
-                <div class="col-sm-1">
-                    <button type="submit" class="btn btn-primary <%= user? "":"disabled"%> id="inputBtn">Create</button>
-                </div>
-            </div>
-        </form>
-        <% for(var i=0; i<rooms.length; i++) {%>
-            <% if(rooms[i]){ %>
-                <div class="row justify-content-center">
-                    <span class="col-sm-2 col-sm-offset-1"><%=rooms[i].name%></span>
-                    <span class="col-sm-5"><%=rooms[i].descr%></span>
-                    <span class="col-sm-1"><%= rooms[i].user.length%>/2</span>
-                    <% if(rooms[i].user.length < 2){%>
-                        <div class="col-sm-1">
-                            <a href="<%= '/room/'+rooms[i].name%>" class="btn btn-success <%= user? "":"disabled"%>" role="button">Join</a>
-                        </div>
-                    <% } else { %>
-                        <div class="col-sm-1">
-                            <a href="<%= '/room/'+rooms[i].name%>" class="btn btn-warning disabled" role="button">Full</a>
-                        </div>
-                    <% } %>
-                    <div class="col-sm-1">
-                         <button class="btn btn-danger <%= user? "":"disabled"%>" onclick="deleteRoom('<%=rooms[i].name%>');return false;">Delete</button>
-                    </div>
-            	</div>
-            <% } %>
-        <% } %>
     </div>
 
+    <div class="container" style="padding-bottom:100px;">
+            <div class="row">
+               <form action="/room/create" method="post">
+                <div class="col-sm-3"  > <input type="text" class="form-control" id="inputRoom" placeholder="Room name" name="room" pattern ="[a-zA-Z0-9]+" required> </div>
+                <div class="col-sm-6"> <input type="text" class="form-control" id="inputDescr" placeholder="Description" name="descr" > </div>
+                <div class="col-sm-1" style="padding-top:20px;"> 2</div>
+                <div class="col-sm-2"> <button class="button" id="btn" type="submit"  <%= user? "":"disabled"%> id="inputBtn" ">Create</button> </div>
+
+               </form>
+            </div>
+
+    </div>
+
+
+    <div class="container">
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><i class="material-icons">&#xe7f8;</i>Room Name </th>
+            <th><i class="material-icons">&#xe873;</i>Room Description</th>
+            <th><i class="material-icons">&#xe7fb;</i>capacity</th>
+            <th><i class="material-icons">&#xe7f0;</i>Join</th>
+            <th><i class="material-icons">&#xe16c;</i>Delete</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        <% for (var id in rooms) {%>
+        <% if(rooms[id]){ %>
+          <tr>
+            <td><%=rooms[id].name%></td>
+            <td><%=rooms[id].descr%></td>
+            <td><%=rooms[id].user.length%>/2</td>
+            <td> <% if(rooms[id].user.length < 2){%> <a href="<%= '/room/'+rooms[id].name%>"  <%= user? "":"disabled"%>" >Join</a> <% } else { %> <a href="<%= '/room/'+rooms[id].name%>" >Full</a> <%}%> </td>
+            <td><button class="buttonD" <%= user? "":"disabled"%>" onclick="deleteRoom('<%=rooms[id].name%>');return false;">Delete</button></td>
+          </tr>
+          <% }%>
+          <%}%>
+        </tbody>
+
+      </table>
+    </div>
+
+
+
+
     <script>
+
         function deleteRoom(roomId){
             console.log('delete'+roomId)
             var init = { method: 'DELETE',
@@ -63,6 +85,8 @@
             fetch('/room/'+roomId,init)
             .then(res => {location.reload();})
         }
+
+
     </script>
 
     <footer>
