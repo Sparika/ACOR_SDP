@@ -1,7 +1,6 @@
 // server.js
 
 //'use strict';
-
 // set up ======================================================================
 // get all the tools we need
 var express      = require('express');
@@ -16,7 +15,7 @@ var bodyParser   = require('body-parser');
 var session      = require('express-session');
 var os = require('os');
 //var nodeStatic = require('node-static');
-var http = require('http');
+var http = require('http')
 var socketIO = require('socket.io');
 
 var configDB = require('./config/database.js');
@@ -47,17 +46,24 @@ app.use(function(req, res, next) {
 });
 
 // required for passport
+
 app.use(session({
     secret: 'ilovescotchscotchyscotchscotch', // session secret
     resave: true,
     saveUninitialized: true
 }));
+
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-var rooms = []
+
+var rooms = {};
+//rooms = JSON.stringify(rooms);
 app.set('rooms', rooms);
+
+
+
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
@@ -80,15 +86,21 @@ io.sockets.on('connection', function(socket) {
     log('Client said: ', message);
     // for a real app, would be room-only (not broadcast)
     //io.to(message.room).emit('event', message.message);
-    //socket.broadcast.emit('message', message.message);
+      //socket.broadcast.emit('message', message.message);
       socket.broadcast.in(message.room).emit('message', message.message);
+  });
+
+  socket.on('tag',function (tag) {
+    log('tag',tag);
+    socket.broadcast.emit('tag', tag.tag)
+
   });
 
   socket.on('join', function(room) {
     log('Received request to join room ' + room);
     socket.join(room);
-    rooms[room].socket.push(socket)
-    socket.emit('joined', room)
+    rooms[room].socket.push(socket);
+    socket.emit('joined', room);
     socket.broadcast.to(room).emit('join', room);
   });
 
@@ -110,11 +122,11 @@ io.sockets.on('connection', function(socket) {
 });
 
 
+
 //
 //
 //var fileServer = new(nodeStatic.Server)();
 //var app = http.createServer(function(req, res) {
 //  fileServer.serve(req, res);
 //}).listen(8080);
-
 
