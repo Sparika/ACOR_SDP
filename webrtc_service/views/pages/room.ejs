@@ -5,50 +5,60 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../css/room.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+<style>
+ #idp{
+ display: inline;
+ }
 
+
+.popover-title {
+    color: Black;
+    font-size: 15px;
+    text-align: center;
+}
+
+.popover-content {
+    color: Black;
+    font-size: 14px;
+}
+
+
+</style>
 
 <body>
 
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" style="color: black;font-weight: bold;margin-top:5px;">ACOR WebRTC</a>
-        </div>
-        <ul class="nav navbar-nav">
-          <li><a href="/"><span class="glyphicon glyphicon-home"></span>Home</a></li>
-
-     	<% if (user) {%>
-            <li><a href="/profile"><span class="glyphicon glyphicon-user"></span><%=user.local.email || user.jwt.sub%></a></li>
-            <% } %>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right">
-    	<% if(user){%>
-          <li><a href="/logout"><span class="glyphicon glyphicon-off"></span>Logout</a></li>
-    	<% } %>
-
-        </ul>
-      </div>
-    </nav>
+<header>
+<% include ../partials/header %>
+</header>
 
 
-<div class="container text-center">
-<h4>Room ID : <%= room %></h4>
-</div>
+
 
 <div class="container" >
-    <div id="Container" class="embed-responsive embed-responsive-4by3" onmouseover="openNav()"  onmouseout="closeNav()" style="height:500px;">
-    <video id="remoteVideo" class="remoteVideo embed-responsive-item" autoplay></video>
-    <video  id="localVideo" class="localVideo" controls autoplay ></video>
+    <div class="row" onmouseover="openNav()"  onmouseout="closeNav()">
+        <div class="col-sm-12" >
+        <h4 style="text-align: center;">Room ID : <%= room %></h4>
+            <div  id="Container" class="embed-responsive embed-responsive-21by1"  style="height:400px;" >
+            <video id="remoteVideo" class="remoteVideo" autoplay ></video>
+            <video  id="localVideo" class="localVideo"  autoplay ></video>
+            </div>
+            <div id="mySidenav" class="sidenav">
+            <ul  id="video-controls" class="ct">
+                <span id="stop" onclick="hangup()" class="glyphicon glyphicon-phone-alt"></span>
+                <span id="mute" class="glyphicon glyphicon glyphicon-bullhorn"></span>
+                <span id="fs"  class="glyphicon  glyphicon glyphicon-th-large"></span>
+            </ul>
+            </div>
 
-        <div id="mySidenav" class="sidenav">
-        <ul id="video-controls" class="ct">
-            <span id="stop" onclick="hangup()" class="glyphicon glyphicon-phone-alt"></span>
-            <span id="mute" class="glyphicon glyphicon glyphicon-bullhorn"></span>
-            <span id="fs"   class="glyphicon  glyphicon glyphicon-th-large"></span>
-        </ul>
         </div>
+    </div>
+</div>
+
+    <div>
+    <span id="start" class="glyphicon glyphicon-play-circle"></span>
+    <p id="conv">Start Conversation</p>
     </div>
 </div>
 
@@ -58,26 +68,31 @@
 			<div id="zone" class="col-md-4">
 			<i class="glyphicon glyphicon-tag"></i>
 			<h4 style="font-family: Junction-regular;">Autority</h4>
-			<p>Service:</p> <br/>
-			<p>Idp:</p> <br/>
-			<p>Algorithme:</p> <br/>
+			<p id="id" ></p>
+			<p style="margin-bottom: -10px;margin-top:-5px;" id="idp"></p>
+			<p id="algo"></p>
      		</div>
 
 			<div id="zone" class="col-md-4">
 			<i class="glyphicon glyphicon-edit"></i>
-			<h4 style="font-family: Junction-regular;">Score</h4>
+			<h4 id="scoreTitle" style="font-family: Junction-regular;">Score</h4> <p id ="score"> </p>
+			<p id="desc_score"> </p>
 			</div>
 
 			<div id="zone" class="col-md-4">
 			<i class="glyphicon glyphicon-earphone"></i>
-			<h4 style="font-family: Junction-regular;">information caller</h4>
+			<ul class="list-inline">
+                <li><span id ='informationCaller' style='font-size:18px;' title="Trust zone Level" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="White zone : height confidence level  <br> Grey  zone  : medium confidence level <br> Black zone : low confidence level" >Information caller</span></li>
+            </ul>
+            <p> ID:<%= user._id %> <br> Login: <%=user.local.email %> </p>
 			</div>
 		</div>
 	</div>
 </div>
 
 
-<div class="container" style="padding-top:50px;">
+
+<div class="container" style="padding-top:10px; padding-bottom: 20px;">
 	<div class="row centered">
  		<div class="col-md-2" onSubmit="return raiseDistantACR()">
   		<h5 style="font-family: Junction-regular;">Peer ACR:</h5>
@@ -85,15 +100,16 @@
 		</div>
 
  		<div  class="col-md-8">
-  		<h5 style="font-family: Junction-regular;">Peer Id Origin :</h5>
+  		<h5 style="font-family: Junction-regular;">Idp :</h5>
 		<input id="peer_or" type="text" value ="" class="form-control"/>
 		</div>
 
 		<div  class="col-md-2">
-		<button id="btn" type="button" class="btn btn-secondary" onclick="raiseDistantACR();return false;">Register</button>
+		<button id="btn" type="button" class="btn btn-secondary" onclick="raiseDistantACR();return false;">Request</button>
 		</div>
 	</div>
 </div>
+
 
 
 <div class="container">
@@ -109,26 +125,39 @@
 
 
 
-<div class="container">
-    <h2>console:</h2>
-    <p id="display"> <br>
-    <p id="display2"> <br>
-    <p id="display3"> <br>
-    </p>
-</div>
+    <div class="container">
+            <div id="feedback2" class="overlay2">
+                <div class="overlay-content2">
+                <p style="text-align: center;"> <i class="material-icons" >&#xe0d1;</i><br> <h4 style="text-align: center;">Incoming call from <%=user.local.email %> </h4> </p>
+                <p> <br> <h4>Spit probability for this call : <p id ="score"> </p></h4>  <br> <br> <p style="text-align: center;font-size:22px;">do you want accept this call ?</p></p>
+
+                </div>
+                    		<ul class="cd-buttons">
+                              <li class="first">   <a id="accept" class="active"> Accept </a></li>
+                              <li class="second" > <a href="/">Reject</a></li>
+                            </ul>
+
+
+            </div>
+    </div>
+
+
+
+
 
 
     <footer class="container-fluid bg-4 text-center footer navbar-fixed-bottom" fixed>
     <p><br/><a class="btn btn-theme">© Copyright 2017 Orange Labs</a></p>
     </footer>
 
-
     <script>
         var room = "<%= room %>"
     </script>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/lib/adapter_latest.js"></script>
     <script src="/javascripts/main.js"></script>
+    <script src="/javascripts/test.js"></script>
 
 </body>
 
