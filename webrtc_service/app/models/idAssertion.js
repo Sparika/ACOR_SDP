@@ -1,5 +1,4 @@
 
-
 var mongoose   = require ('mongoose');
 
 var User       = require('./user');
@@ -28,14 +27,24 @@ var assertion = module.exports = mongoose.model('assertion',idAssertion);
         assertion.findOne(id,callback);
 
         //var users = user.find();
-
     };
+
+
+
+
 
 
     /*module.exports.getAssertionById = function (id, callback) {
         assertion.findById(id,callback);
     };
 */
+
+
+    //-----------------------spit call--------------------//
+
+
+
+
 
 
 
