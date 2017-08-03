@@ -4,9 +4,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var fs = require('fs');
-var spit = require('/root/IdeaProject/ACOR_SDP/webrtc_service/app/models/spit.js');
-var zone = require('/root/IdeaProject/ACOR_SDP/webrtc_service/app/models/zone.js');
-var auth = require('/root/IdeaProject/ACOR_SDP/webrtc_service/app/models/authority.js');
+var spit = require('../app/models/spit.js');
+var zone = require('../app/models/zone.js');
+var auth = require('../app/models/authority.js');
 var prop =0;
 mongoose.Promise = global.Promise;
 

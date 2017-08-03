@@ -211,8 +211,8 @@ socket.on('tag',function (tag) {
                 jsonResponse = xhr.responseText;
                 //alert(jsonResponse);
                 var x = Math.round(jsonResponse*100)/100;
-                //alert(x);
                 document.getElementById("score").innerHTML = Math.round(jsonResponse*10000)/10000;
+                document.getElementById("scores").innerHTML = 'Spit probability for this call :'+Math.round(jsonResponse*10000)/10000;
             }
         };
 
