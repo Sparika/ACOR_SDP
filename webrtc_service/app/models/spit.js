@@ -1,5 +1,5 @@
 var mongoose   = require ('mongoose');
-var zone = require('/root/IdeaProject/ACOR_SDP/webrtc_service/app/models/zone.js')
+var zone = require('../models/zone.js')
 
 var SpitCallSchema = mongoose.Schema
 ({

@@ -1,7 +1,7 @@
 
 var mongoose   = require ('mongoose');
-var zone = require('/root/IdeaProject/ACOR_SDP/webrtc_service/app/models/zone.js')
-var spit = require('/root/IdeaProject/ACOR_SDP/webrtc_service/app/models/spit.js')
+var zone = require('../models/zone.js')
+var spit = require('../models/spit.js')
 
 var ObjectId = require('mongoose');
 var ObjectId = require('mongoose');
