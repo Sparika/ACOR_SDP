@@ -42,24 +42,12 @@ body{
 }
 
 .glyphicon-play-circle{
-    font-size: 100px;
+    font-size: 80px;
     color: Black;
 
 }
 
-#start{
-    position: absolute;
-    left:47%;
-    right:50%;
-    top:20%;
-}
-#conv{
-    position: absolute;
-    left:47%;
-    right:50%;
-    bottom:61%;
-    font-size: 22px;
-}
+
 .glyphicon.glyphicon-bullhorn {
     font-size: 30px;
     color: Black;
@@ -194,7 +182,7 @@ input[type=number] {
     background-color: #f9f9fD; /* Black Gray */
     color: #fff;
     padding-top:    20px;
-    padding-bottom: 20px;
+
 }
 
 .glyphicon.glyphicon-home {
@@ -248,11 +236,10 @@ input[type=number] {
 
 
 .overlay2 {
-    height: 45%;
     width: 0;
     position: fixed;
     z-index: 1;
-    bottom: 0;
+    top: 0;
     right: 0;
     background-color:#f2f2f2;
     overflow-x: hidden;
@@ -322,3 +309,24 @@ li a:hover:not(.active) {
     background-color: #4CAF50;
 }
 
+
+
+
+#list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#ele {
+    float: left;
+    display: block;
+    padding: 10px;
+}
+
+.list1{
+    position: absolute;
+    bottom:    55%;
+    left:  40%;
+}

@@ -143,6 +143,8 @@ socket.on('tag',function (tag) {
         document.getElementById("feedback2").style = 'hidden';
         document.getElementById('remoteVideo').style.visibility ="visible" ;
         sendMessage('display');
+
+
         });
 
     }else {
@@ -300,9 +302,7 @@ socket.on('message', function(message) {
     } else if (message === 'bye' && isStarted) {
         handleRemoteHangup();
     }else if (message === 'display') {
-
         document.getElementById('remoteVideo').style.visibility ="visible" ;
-
     }
 
 });
@@ -538,25 +538,6 @@ function hangup() {
     sendMessage('bye');
     stop();
 
-    // generate tag
-
-    /*var item = {
-
-    Tag : {
-            service: servicehost,
-            idp    : servicehost,
-            algo   : 'x',
-            score  : 0
-        },
-
-    Feedback: 0,
-    date : Date.now(),
-    calltime: 2
-
-        }*/
-
-    // send the tag to user B
-    //generate and save in spitclass
 
 }
 
@@ -582,6 +563,8 @@ function stop() {
     open_feedback();
     hideConversation();
     close_feedback();
+
+
 }
 
 
@@ -752,6 +735,8 @@ function open_feedback() {
 function hideConversation() {
     //document.getElementById("Container").style.width = "0%";
     document.getElementById('Container').remove();
+    document.getElementById("foo").remove();
+    document.getElementById("mySidenav").remove();
 }
 
 

@@ -54,13 +54,17 @@
 
         </div>
     </div>
+    <div class="list1">
+        <ul id="list">
+          <li id="ele"> <p id="conv">Start Conversation </p> </li>
+          <li id="ele"><span id="start" class="glyphicon glyphicon-play-circle"></span></li>
+        </ul>
+       </div>
 </div>
 
-    <div>
-    <span id="start" class="glyphicon glyphicon-play-circle"></span>
-    <p id="conv">Start Conversation</p>
-    </div>
-</div>
+
+
+
 
 <div>
 	<div class="container" >
@@ -95,7 +99,7 @@
 <div class="container" style="padding-top:10px; padding-bottom: 20px;">
 	<div class="row centered">
  		<div class="col-md-2" onSubmit="return raiseDistantACR()">
-  		<h5 style="font-family: Junction-regular;">Peer ACR:</h5>
+  		<h5 style="font-family: Junction-regular;">Called Auth Level</h5>
 		<input id="peer_acr" type="number" min="-1" max="4" step="1" value ="0" class="form-control"/>
 		</div>
 
@@ -128,7 +132,7 @@
     <div class="container">
             <div id="feedback2" class="overlay2">
                 <div class="overlay-content2">
-                <p style="text-align: center;"> <i class="material-icons" >&#xe0d1;</i><br> <h4 style="text-align: center;">Incoming call from <%=user.local.email %> </h4> </p>
+                <p style="text-align: center;"> <i class="material-icons" >&#xe0d1;</i><br> <h4 style="text-align: center;">Incoming call</h4> </p>
                 <p> <br> <h4> <p id ="scores"> </p></h4>  <br> <br> <p style="text-align: center;font-size:22px;">do you want accept this call ?</p></p>
 
                 </div>
@@ -146,7 +150,7 @@
 
 
 
-    <footer class="container-fluid bg-4 text-center footer navbar-fixed-bottom" fixed>
+    <footer id="foo" class="container-fluid bg-4 text-center ">
     <p><br/><a class="btn btn-theme">© Copyright 2017 Orange Labs</a></p>
     </footer>
 
