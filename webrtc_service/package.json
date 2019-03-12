@@ -7,7 +7,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "atob": "^1.1.2",
+    "atob": ">=2.1.0",
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.15.2",
     "btoa": "^1.1.2",
